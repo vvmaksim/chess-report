@@ -1,6 +1,7 @@
 plugins {
     alias(deps.plugins.kotlin.jvm)
-    id("application")
+    alias(deps.plugins.compose)
+    alias(deps.plugins.compose.plugin)
 }
 
 group = "io.github.vvmaksim"
@@ -8,23 +9,25 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://jitpack.io") }
+    google()
 }
 
-dependencies {
-    testImplementation(kotlin("test"))
-}
-
-tasks.test {
-    useJUnitPlatform()
-}
 kotlin {
     jvmToolchain(21)
 }
 
-application {
-    mainClass = "io.github.vvmaksim.MainKt"
+compose.desktop {
+    application {
+        mainClass = "io.github.vvmaksim.app.MainKt"
+    }
 }
 
-tasks.named<JavaExec>("run") {
-    workingDir = file("$projectDir/..")
+dependencies {
+    implementation(compose.desktop.currentOs)
+    implementation(deps.kotlin.logging)
+    implementation(deps.logback.classic)
+    implementation(deps.chesslib)
+    implementation(deps.apache.poi)
+    implementation(deps.apache.poi.ooxml)
 }
