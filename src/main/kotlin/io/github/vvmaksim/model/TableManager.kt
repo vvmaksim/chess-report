@@ -286,8 +286,8 @@ object TableManager {
         val whiteScore: String
         val blackScore: String
         when (result) {
-            GameResult.FIRST_PLAYER_IS_WINNER -> "1" to "0"
-            GameResult.SECOND_PLAYER_IS_WINNER -> "0" to "1"
+            GameResult.FIRST_PLAYER_IS_WINNER -> if (matchNumber == 1) "1" to "0" else "0" to "1"
+            GameResult.SECOND_PLAYER_IS_WINNER -> if (matchNumber == 1) "0" to "1" else "1" to "0"
             GameResult.DRAW -> "0.5" to "0.5"
         }.let {
             whiteScore = it.first
