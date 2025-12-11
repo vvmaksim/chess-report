@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.vvmaksim"
-version = "1.0.0"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
@@ -26,7 +26,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Exe, TargetFormat.Deb, TargetFormat.Dmg)
             packageName = "Chess Report"
-            packageVersion = "1.0.0"
+            packageVersion = "1.0.1"
             description = "Chess Report application"
             vendor = "vvmaksim"
             modules("java.naming")
