@@ -29,6 +29,7 @@ compose.desktop {
             packageVersion = "1.0.0"
             description = "Chess Report application"
             vendor = "vvmaksim"
+            modules("java.naming")
         }
     }
 }
