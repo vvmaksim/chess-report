@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "io.github.vvmaksim"
-version = "1.0-SNAPSHOT"
+version = "beta 1.0.0"
 
 repositories {
     mavenCentral()
