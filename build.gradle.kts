@@ -1,3 +1,5 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+
 plugins {
     alias(deps.plugins.kotlin.jvm)
     alias(deps.plugins.compose)
@@ -6,7 +8,7 @@ plugins {
 }
 
 group = "io.github.vvmaksim"
-version = "beta 1.0.0"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -21,6 +23,13 @@ kotlin {
 compose.desktop {
     application {
         mainClass = "io.github.vvmaksim.app.MainKt"
+        nativeDistributions {
+            targetFormats(TargetFormat.Exe, TargetFormat.Deb, TargetFormat.Dmg)
+            packageName = "Chess Report"
+            packageVersion = "1.0.0"
+            description = "Chess Report application"
+            vendor = "vvmaksim"
+        }
     }
 }
 
