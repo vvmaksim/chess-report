@@ -1,6 +1,7 @@
 package io.github.vvmaksim.model
 
 import io.github.vvmaksim.app.config.PrivateConfig
+import kotlinx.coroutines.runBlocking
 import org.apache.poi.ss.usermodel.BorderStyle
 import org.apache.poi.ss.usermodel.HorizontalAlignment
 import org.apache.poi.ss.usermodel.VerticalAlignment
@@ -61,12 +62,21 @@ object TableManager {
         startColumnIndex: Int,
         isLastTable: Boolean,
     ): Int {
-        val movesString = if (matchNumber == 1) data.firstMatchMoves else data.secondMatchMoves
+        var movesString = if (matchNumber == 1) data.firstMatchMoves else data.secondMatchMoves
+        var result = if (matchNumber == 1) data.firstMatchResult else data.secondMatchResult
+        if ((matchNumber == 1 && data.firstMatchMovesAsLink) || (matchNumber == 2 && data.secondMatchMovesAsLink)) {
+            runBlocking {
+                val pgnManager = PgnManager()
+                val parseResult = pgnManager.getPgnFromUrl(movesString)
+                movesString = parseResult.getOrNull()?.moves ?: ""
+                result = parseResult.getOrNull()?.result ?: GameResult.UNKNOWN
+                pgnManager.close()
+            }
+        }
         val parsedMoves = ChessManager.getMoves(movesString)
         val movesMap = parsedMoves.associate { it.first to (it.second to it.third) }
         val whitePlayer = if (matchNumber == 1) data.firstPlayerName else data.secondPlayerName
         val blackPlayer = if (matchNumber == 1) data.secondPlayerName else data.firstPlayerName
-        val result = if (matchNumber == 1) data.firstMatchResult else data.secondMatchResult
         val movesCount = parsedMoves.size
         val blocksCount = maxOf(2, (movesCount + 31) / 32)
         val totalColumns = blocksCount * 3
@@ -289,6 +299,7 @@ object TableManager {
             GameResult.FIRST_PLAYER_IS_WINNER -> if (matchNumber == 1) "1" to "0" else "0" to "1"
             GameResult.SECOND_PLAYER_IS_WINNER -> if (matchNumber == 1) "0" to "1" else "1" to "0"
             GameResult.DRAW -> "0.5" to "0.5"
+            GameResult.UNKNOWN -> "*" to "*"
         }.let {
             whiteScore = it.first
             blackScore = it.second

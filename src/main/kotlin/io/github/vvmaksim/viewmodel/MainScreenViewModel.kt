@@ -23,8 +23,10 @@ class MainScreenViewModel {
     val studentIDNumber = mutableStateOf(TextFieldValue("100000"))
     val teacherName = mutableStateOf(TextFieldValue("Преподаватель"))
     val firstMatchMoves = mutableStateOf(TextFieldValue(""))
+    val firstMatchMovesAsLink = mutableStateOf(true)
     val firstMatchResult = mutableStateOf(GameResult.FIRST_PLAYER_IS_WINNER)
     val secondMatchMoves = mutableStateOf(TextFieldValue(""))
+    val secondMatchMovesAsLink = mutableStateOf(true)
     val secondMatchResult = mutableStateOf(GameResult.FIRST_PLAYER_IS_WINNER)
     val path = mutableStateOf(Path(PrivateConfig.getDefaultUserDirPath()))
 
@@ -40,8 +42,10 @@ class MainScreenViewModel {
                 studentIDNumber = studentIDNumber.value.text.toIntOrNull() ?: -1,
                 teacherName = teacherName.value.text,
                 firstMatchMoves = firstMatchMoves.value.text,
+                firstMatchMovesAsLink = firstMatchMovesAsLink.value,
                 firstMatchResult = firstMatchResult.value,
                 secondMatchMoves = secondMatchMoves.value.text,
+                secondMatchMovesAsLink = secondMatchMovesAsLink.value,
                 secondMatchResult = secondMatchResult.value,
             )
         isGenerated.value = true

@@ -138,14 +138,34 @@ fun DataBlock(
             )
             Spacer(Modifier.padding(8.dp))
             DataBlockTitleText("Партия 1:")
+
+            CustomCheckboxRow(
+                text = "Записать ходы партии по ссылки",
+                checked = viewModel.firstMatchMovesAsLink.value,
+                onCheckedChange = { viewModel.firstMatchMovesAsLink.value = it },
+            )
+
             Spacer(Modifier.padding(8.dp))
             CustomTextField(
                 value = viewModel.firstMatchMoves.value,
                 onValueChange = { newValue: TextFieldValue ->
                     viewModel.firstMatchMoves.value = newValue
                 },
-                label = { Text("Ходы в формате PGN") },
-                placeholder = { Text(text = "1.e4 e5 2.Nf3 Nc6 ...") },
+                label = {
+                    Text(
+                        text =
+                            if (viewModel.firstMatchMovesAsLink.value) {
+                                "Вставьте ссылку на анализ партии"
+                            } else {
+                                "Ходы в формате PGN"
+                            },
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = if (viewModel.firstMatchMovesAsLink.value) "https://lichess.org/" else "1.e4 e5 2.Nf3 Nc6 ...",
+                    )
+                },
                 singleLine = false,
                 maxLines = if (isFocusedFirstMatchMovesField.value) 10 else 2,
                 minLines = if (isFocusedFirstMatchMovesField.value) 4 else 1,
@@ -155,34 +175,57 @@ fun DataBlock(
                         .onFocusChanged { isFocusedFirstMatchMovesField.value = it.isFocused },
             )
             Spacer(Modifier.padding(8.dp))
-            DataBlockTitleText("Победитель")
-            Spacer(Modifier.padding(8.dp))
-            DropdownSelectButton(
-                items = listOf(viewModel.firstPlayerName.value.text, viewModel.secondPlayerName.value.text, "Ничья"),
-                selectedItem =
-                    when (viewModel.firstMatchResult.value) {
-                        GameResult.FIRST_PLAYER_IS_WINNER -> viewModel.firstPlayerName.value.text
-                        GameResult.SECOND_PLAYER_IS_WINNER -> viewModel.secondPlayerName.value.text
-                        GameResult.DRAW -> "Ничья"
+            if (!viewModel.firstMatchMovesAsLink.value) {
+                DataBlockTitleText("Победитель")
+                Spacer(Modifier.padding(8.dp))
+                DropdownSelectButton(
+                    items = listOf(viewModel.firstPlayerName.value.text, viewModel.secondPlayerName.value.text, "Ничья"),
+                    selectedItem =
+                        when (viewModel.firstMatchResult.value) {
+                            GameResult.FIRST_PLAYER_IS_WINNER -> viewModel.firstPlayerName.value.text
+                            GameResult.SECOND_PLAYER_IS_WINNER -> viewModel.secondPlayerName.value.text
+                            GameResult.DRAW -> "Ничья"
+                            else -> "Что-то пошло не так=("
+                        },
+                    onItemSelected = { selectedResult: String ->
+                        when (selectedResult) {
+                            viewModel.firstPlayerName.value.text -> viewModel.firstMatchResult.value = GameResult.FIRST_PLAYER_IS_WINNER
+                            viewModel.secondPlayerName.value.text -> viewModel.firstMatchResult.value = GameResult.SECOND_PLAYER_IS_WINNER
+                            else -> viewModel.firstMatchResult.value = GameResult.DRAW
+                        }
                     },
-                onItemSelected = { selectedResult: String ->
-                    when (selectedResult) {
-                        viewModel.firstPlayerName.value.text -> viewModel.firstMatchResult.value = GameResult.FIRST_PLAYER_IS_WINNER
-                        viewModel.secondPlayerName.value.text -> viewModel.firstMatchResult.value = GameResult.SECOND_PLAYER_IS_WINNER
-                        else -> viewModel.firstMatchResult.value = GameResult.DRAW
-                    }
-                },
-            )
-            Spacer(Modifier.padding(8.dp))
+                )
+                Spacer(Modifier.padding(8.dp))
+            }
             DataBlockTitleText("Партия 2:")
+
+            CustomCheckboxRow(
+                text = "Записать ходы партии по ссылки",
+                checked = viewModel.secondMatchMovesAsLink.value,
+                onCheckedChange = { viewModel.secondMatchMovesAsLink.value = it },
+            )
+
             Spacer(Modifier.padding(8.dp))
             CustomTextField(
                 value = viewModel.secondMatchMoves.value,
                 onValueChange = { newValue: TextFieldValue ->
                     viewModel.secondMatchMoves.value = newValue
                 },
-                label = { Text("Ходы в формате PGN") },
-                placeholder = { Text(text = "1.e4 e5 2.Nf3 Nc6 ...") },
+                label = {
+                    Text(
+                        text =
+                            if (viewModel.secondMatchMovesAsLink.value) {
+                                "Вставьте ссылку на анализ партии"
+                            } else {
+                                "Ходы в формате PGN"
+                            },
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = if (viewModel.secondMatchMovesAsLink.value) "https://lichess.org/" else "1.e4 e5 2.Nf3 Nc6 ...",
+                    )
+                },
                 singleLine = false,
                 maxLines = if (isFocusedSecondMatchMovesField.value) 10 else 2,
                 minLines = if (isFocusedSecondMatchMovesField.value) 4 else 1,
@@ -192,25 +235,28 @@ fun DataBlock(
                         .onFocusChanged { isFocusedSecondMatchMovesField.value = it.isFocused },
             )
             Spacer(Modifier.padding(8.dp))
-            DataBlockTitleText("Победитель")
-            Spacer(Modifier.padding(8.dp))
-            DropdownSelectButton(
-                items = listOf(viewModel.firstPlayerName.value.text, viewModel.secondPlayerName.value.text, "Ничья"),
-                selectedItem =
-                    when (viewModel.secondMatchResult.value) {
-                        GameResult.FIRST_PLAYER_IS_WINNER -> viewModel.firstPlayerName.value.text
-                        GameResult.SECOND_PLAYER_IS_WINNER -> viewModel.secondPlayerName.value.text
-                        GameResult.DRAW -> "Ничья"
+            if (!viewModel.secondMatchMovesAsLink.value) {
+                DataBlockTitleText("Победитель")
+                Spacer(Modifier.padding(8.dp))
+                DropdownSelectButton(
+                    items = listOf(viewModel.firstPlayerName.value.text, viewModel.secondPlayerName.value.text, "Ничья"),
+                    selectedItem =
+                        when (viewModel.secondMatchResult.value) {
+                            GameResult.FIRST_PLAYER_IS_WINNER -> viewModel.firstPlayerName.value.text
+                            GameResult.SECOND_PLAYER_IS_WINNER -> viewModel.secondPlayerName.value.text
+                            GameResult.DRAW -> "Ничья"
+                            else -> "Что-то пошло не так=("
+                        },
+                    onItemSelected = { selectedResult: String ->
+                        when (selectedResult) {
+                            viewModel.firstPlayerName.value.text -> viewModel.secondMatchResult.value = GameResult.FIRST_PLAYER_IS_WINNER
+                            viewModel.secondPlayerName.value.text -> viewModel.secondMatchResult.value = GameResult.SECOND_PLAYER_IS_WINNER
+                            else -> viewModel.secondMatchResult.value = GameResult.DRAW
+                        }
                     },
-                onItemSelected = { selectedResult: String ->
-                    when (selectedResult) {
-                        viewModel.firstPlayerName.value.text -> viewModel.secondMatchResult.value = GameResult.FIRST_PLAYER_IS_WINNER
-                        viewModel.secondPlayerName.value.text -> viewModel.secondMatchResult.value = GameResult.SECOND_PLAYER_IS_WINNER
-                        else -> viewModel.secondMatchResult.value = GameResult.DRAW
-                    }
-                },
-            )
-            Spacer(Modifier.padding(8.dp))
+                )
+                Spacer(Modifier.padding(8.dp))
+            }
             DataBlockTitleText("Выберите директорию, в которую будет сохранён отчёт:")
             Spacer(Modifier.padding(8.dp))
             SelectPathButton(
