@@ -7,6 +7,8 @@ on:
 jobs:
   build-and-release:
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -24,9 +26,16 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Update packageVersion with release tag
+      - name: Update packageVersion on Linux/Windows
+        if: runner.os != 'macOS'
         run: |
           sed -i "s/packageVersion = ".*"/packageVersion = "${{ github.ref_name }}"/" build.gradle.kts
+        shell: bash
+
+      - name: Update packageVersion on macOS
+        if: runner.os == 'macOS'
+        run: |
+          sed -i '' "s/packageVersion = ".*"/packageVersion = "${{ github.ref_name }}"/" build.gradle.kts
         shell: bash
 
       - name: Make gradlew executable
@@ -35,15 +44,15 @@ jobs:
 
       - name: Build for Linux
         if: runner.os == 'Linux'
-        run: ./gradlew packageDeb packageAppImage
+        run: ./gradlew packageDeb packageAppImage -Dorg.gradle.daemon=false
         
       - name: Build for Windows
         if: runner.os == 'Windows'
-        run: ./gradlew packageMsi packageExe
+        run: ./gradlew packageMsi packageExe -Dorg.gradle.daemon=false
 
       - name: Build for macOS
         if: runner.os == 'macOS'
-        run: ./gradlew packageDmg
+        run: ./gradlew packageDmg -Dorg.gradle.daemon=false
         
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
