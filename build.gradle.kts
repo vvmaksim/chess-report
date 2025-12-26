@@ -31,6 +31,16 @@ compose.desktop {
             description = "Chess Report application"
             vendor = "vvmaksim"
             modules("java.naming")
+
+            linux {
+                iconFile.set(project.file("src/main/resources/icons/app_icon.png"))
+            }
+            windows {
+                iconFile.set(project.file("src/main/resources/icons/app_icon.png"))
+            }
+            macOS {
+                iconFile.set(project.file("src/main/resources/icons/app_icon.png"))
+            }
         }
     }
 }
