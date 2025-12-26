@@ -41,6 +41,14 @@ dependencies {
     implementation(deps.chesslib)
     implementation(deps.apache.poi)
     implementation(deps.apache.poi.ooxml)
+    implementation(deps.ktor.client.core)
+    implementation(deps.ktor.client.cio)
+    implementation(deps.log4j.api) // Bridge for Log4j2 API
+    implementation(deps.log4j.slf4j.impl) // Bridge for Log4j2 to SLF4J
+    implementation(deps.lifecycle.viewmodel)
+    implementation(deps.lifecycle.viewmodel.savedstate)
+    implementation(deps.lifecycle.viewmodel.compose)
+    implementation(deps.kotlinx.coroutines.swing)
 
     testImplementation(deps.junit.jupiter.api)
     testRuntimeOnly(deps.junit.jupiter.engine)
