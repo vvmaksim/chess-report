@@ -24,7 +24,7 @@ compose.desktop {
     application {
         mainClass = "io.github.vvmaksim.app.MainKt"
         nativeDistributions {
-            targetFormats(TargetFormat.Exe, TargetFormat.Deb, TargetFormat.Dmg)
+            targetFormats(TargetFormat.Msi, TargetFormat.Exe, TargetFormat.Deb, TargetFormat.AppImage, TargetFormat.Dmg)
             packageName = "Chess Report"
             packageVersion = "1.0.1"
             description = "Chess Report application"
