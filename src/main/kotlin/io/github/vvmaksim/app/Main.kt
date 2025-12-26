@@ -2,6 +2,7 @@ package io.github.vvmaksim.app
 
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -29,6 +30,7 @@ fun main() =
             },
             title = "Chess Report",
             state = windowState,
+            icon = painterResource("icons/app_icon.png"),
         ) {
             val viewmodel = remember { MainScreenViewModel() }
             window.minimumSize = Dimension(MIN_WIDTH, MIN_HEIGHT)
