@@ -15,5 +15,8 @@ object Logger {
 
     fun warn(message: String) = logger.warn { message }
 
-    fun error(message: String) = logger.error { message }
+    fun error(
+        message: String,
+        e: Exception? = null,
+    ) = logger.error(e) { message }
 }
