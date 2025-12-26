@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import io.github.vvmaksim.app.Logger
 import io.github.vvmaksim.app.config.TextManager
 import io.github.vvmaksim.app.theme.AppTheme
-import io.github.vvmaksim.model.GameResult
 import io.github.vvmaksim.viewmodel.MainScreenViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -152,26 +151,8 @@ fun DataBlock(
                 onValueChange = { newValue: TextFieldValue ->
                     viewModel.firstMatchMoves.value = newValue
                 },
-                label = {
-                    Text(
-                        text =
-                            if (viewModel.firstMatchMovesAsLink.value) {
-                                TextManager.UI.MATCH_MOVES_LABEL_WITH_LINK
-                            } else {
-                                TextManager.UI.MATCH_MOVES_LABEL_WITH_PGN
-                            },
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text =
-                            if (viewModel.firstMatchMovesAsLink.value) {
-                                TextManager.UI.MATCH_MOVES_PLACEHOLDER_WITH_LINK
-                            } else {
-                                TextManager.UI.MATCH_MOVES_PLACEHOLDER_WITH_PGN
-                            },
-                    )
-                },
+                label = { Text(text = viewModel.firstMatchMovesLabel) },
+                placeholder = { Text(text = viewModel.firstMatchMovesPlaceholder) },
                 singleLine = false,
                 maxLines = if (isFocusedFirstMatchMovesField.value) 10 else 2,
                 minLines = if (isFocusedFirstMatchMovesField.value) 4 else 1,
@@ -185,21 +166,9 @@ fun DataBlock(
                 DataBlockTitleText(TextManager.Words.WINNER)
                 Spacer(Modifier.padding(8.dp))
                 DropdownSelectButton(
-                    items = listOf(viewModel.firstPlayerName.value.text, viewModel.secondPlayerName.value.text, TextManager.Words.DRAW),
-                    selectedItem =
-                        when (viewModel.firstMatchResult.value) {
-                            GameResult.FIRST_PLAYER_IS_WINNER -> viewModel.firstPlayerName.value.text
-                            GameResult.SECOND_PLAYER_IS_WINNER -> viewModel.secondPlayerName.value.text
-                            GameResult.DRAW -> TextManager.Words.DRAW
-                            else -> TextManager.Errors.UNKNOWN_ERROR_MESSAGE
-                        },
-                    onItemSelected = { selectedResult: String ->
-                        when (selectedResult) {
-                            viewModel.firstPlayerName.value.text -> viewModel.firstMatchResult.value = GameResult.FIRST_PLAYER_IS_WINNER
-                            viewModel.secondPlayerName.value.text -> viewModel.firstMatchResult.value = GameResult.SECOND_PLAYER_IS_WINNER
-                            else -> viewModel.firstMatchResult.value = GameResult.DRAW
-                        }
-                    },
+                    items = viewModel.winnerOptions,
+                    selectedItem = viewModel.firstMatchSelectedWinner,
+                    onItemSelected = viewModel::onFirstMatchWinnerSelected,
                 )
                 Spacer(Modifier.padding(8.dp))
             }
@@ -217,26 +186,8 @@ fun DataBlock(
                 onValueChange = { newValue: TextFieldValue ->
                     viewModel.secondMatchMoves.value = newValue
                 },
-                label = {
-                    Text(
-                        text =
-                            if (viewModel.secondMatchMovesAsLink.value) {
-                                TextManager.UI.MATCH_MOVES_LABEL_WITH_LINK
-                            } else {
-                                TextManager.UI.MATCH_MOVES_LABEL_WITH_PGN
-                            },
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text =
-                            if (viewModel.secondMatchMovesAsLink.value) {
-                                TextManager.UI.MATCH_MOVES_PLACEHOLDER_WITH_LINK
-                            } else {
-                                TextManager.UI.MATCH_MOVES_PLACEHOLDER_WITH_PGN
-                            },
-                    )
-                },
+                label = { Text(text = viewModel.secondMatchMovesLabel) },
+                placeholder = { Text(text = viewModel.secondMatchMovesPlaceholder) },
                 singleLine = false,
                 maxLines = if (isFocusedSecondMatchMovesField.value) 10 else 2,
                 minLines = if (isFocusedSecondMatchMovesField.value) 4 else 1,
@@ -250,21 +201,9 @@ fun DataBlock(
                 DataBlockTitleText(TextManager.Words.WINNER)
                 Spacer(Modifier.padding(8.dp))
                 DropdownSelectButton(
-                    items = listOf(viewModel.firstPlayerName.value.text, viewModel.secondPlayerName.value.text, TextManager.Words.DRAW),
-                    selectedItem =
-                        when (viewModel.secondMatchResult.value) {
-                            GameResult.FIRST_PLAYER_IS_WINNER -> viewModel.firstPlayerName.value.text
-                            GameResult.SECOND_PLAYER_IS_WINNER -> viewModel.secondPlayerName.value.text
-                            GameResult.DRAW -> TextManager.Words.DRAW
-                            else -> TextManager.Errors.UNKNOWN_ERROR_MESSAGE
-                        },
-                    onItemSelected = { selectedResult: String ->
-                        when (selectedResult) {
-                            viewModel.firstPlayerName.value.text -> viewModel.secondMatchResult.value = GameResult.FIRST_PLAYER_IS_WINNER
-                            viewModel.secondPlayerName.value.text -> viewModel.secondMatchResult.value = GameResult.SECOND_PLAYER_IS_WINNER
-                            else -> viewModel.secondMatchResult.value = GameResult.DRAW
-                        }
-                    },
+                    items = viewModel.winnerOptions,
+                    selectedItem = viewModel.secondMatchSelectedWinner,
+                    onItemSelected = viewModel::onSecondMatchWinnerSelected,
                 )
                 Spacer(Modifier.padding(8.dp))
             }
