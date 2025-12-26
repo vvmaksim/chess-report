@@ -33,38 +33,34 @@ class MainScreenViewModel {
     val secondMatchResult = mutableStateOf(GameResult.FIRST_PLAYER_IS_WINNER)
     val path = mutableStateOf(Path(PrivateConfig.getDefaultUserDirPath()))
 
-    private fun getMatchMovesLabel(movesAsLink: Boolean): String {
-        return if (movesAsLink) {
+    private fun getMatchMovesLabel(movesAsLink: Boolean): String =
+        if (movesAsLink) {
             TextManager.UI.MATCH_MOVES_LABEL_WITH_LINK
         } else {
             TextManager.UI.MATCH_MOVES_LABEL_WITH_PGN
         }
-    }
 
-    private fun getMatchMovesPlaceholder(movesAsLink: Boolean): String {
-        return if (movesAsLink) {
+    private fun getMatchMovesPlaceholder(movesAsLink: Boolean): String =
+        if (movesAsLink) {
             TextManager.UI.MATCH_MOVES_PLACEHOLDER_WITH_LINK
         } else {
             TextManager.UI.MATCH_MOVES_PLACEHOLDER_WITH_PGN
         }
-    }
 
-    private fun getSelectedWinnerText(result: GameResult): String {
-        return when (result) {
+    private fun getSelectedWinnerText(result: GameResult): String =
+        when (result) {
             GameResult.FIRST_PLAYER_IS_WINNER -> firstPlayerName.value.text
             GameResult.SECOND_PLAYER_IS_WINNER -> secondPlayerName.value.text
             GameResult.DRAW -> TextManager.Words.DRAW
             else -> TextManager.Errors.UNKNOWN_ERROR_MESSAGE
         }
-    }
 
-    private fun getGameResultFromString(selectedWinner: String): GameResult {
-        return when (selectedWinner) {
+    private fun getGameResultFromString(selectedWinner: String): GameResult =
+        when (selectedWinner) {
             firstPlayerName.value.text -> GameResult.FIRST_PLAYER_IS_WINNER
             secondPlayerName.value.text -> GameResult.SECOND_PLAYER_IS_WINNER
             else -> GameResult.DRAW
         }
-    }
 
     val firstMatchMovesLabel by derivedStateOf {
         getMatchMovesLabel(firstMatchMovesAsLink.value)
