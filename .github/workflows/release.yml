@@ -29,13 +29,15 @@ jobs:
       - name: Update packageVersion on Linux/Windows
         if: runner.os != 'macOS'
         run: |
-          sed -i "s/packageVersion = \".*\"/packageVersion = \"${{ github.ref_name }}\"/" build.gradle.kts
+          VERSION=${{ github.ref_name }}
+          sed -i "s/packageVersion = \".*\"/packageVersion = \"${VERSION#v}\"/" build.gradle.kts
         shell: bash
 
       - name: Update packageVersion on macOS
         if: runner.os == 'macOS'
         run: |
-          sed -i '' "s/packageVersion = \".*\"/packageVersion = \"${{ github.ref_name }}\"/" build.gradle.kts
+          VERSION=${{ github.ref_name }}
+          sed -i '' "s/packageVersion = \".*\"/packageVersion = \"${VERSION#v}\"/" build.gradle.kts
         shell: bash
 
       - name: Make gradlew executable
@@ -44,15 +46,15 @@ jobs:
 
       - name: Build for Linux
         if: runner.os == 'Linux'
-        run: ./gradlew packageDeb packageAppImage -Dorg.gradle.daemon=false
+        run: ./gradlew packageDeb packageAppImage --no-daemon --console=plain
         
       - name: Build for Windows
         if: runner.os == 'Windows'
-        run: ./gradlew packageMsi packageExe -Dorg.gradle.daemon=false
+        run: ./gradlew packageMsi packageExe --no-daemon --console=plain
 
       - name: Build for macOS
         if: runner.os == 'macOS'
-        run: ./gradlew packageDmg -Dorg.gradle.daemon=false
+        run: ./gradlew packageDmg --no-daemon --console=plain
         
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
