@@ -80,15 +80,20 @@ class PgnManager {
 
     private suspend fun fetchLichessPgn(url: String): Result<String> =
         try {
-            val gameId = url.substringAfterLast("/")
-            val pgnUrl = "https://lichess.org/game/export/$gameId"
+            val path = URI(url).path
+            val gameId = path.split('/').firstOrNull { it.isNotBlank() }?.take(8)
 
-            val pgn = client.get(pgnUrl).bodyAsText()
-
-            if (pgn.trim().startsWith("<!DOCTYPE html", ignoreCase = true) || pgn.trim().startsWith("Not Found")) {
-                Result.failure(IllegalArgumentException("Game not found or invalid URL"))
+            if (gameId == null || gameId.length < 8) {
+                Result.failure(IllegalArgumentException("Invalid Lichess URL: could not extract a valid 8-character game ID from '$url'"))
             } else {
-                Result.success(pgn)
+                val pgnUrl = "https://lichess.org/game/export/$gameId"
+                val pgn = client.get(pgnUrl).bodyAsText()
+
+                if (pgn.trim().startsWith("<!DOCTYPE html", ignoreCase = true) || pgn.trim().startsWith("Not Found")) {
+                    Result.failure(IllegalArgumentException("Game not found on Lichess for ID: $gameId"))
+                } else {
+                    Result.success(pgn)
+                }
             }
         } catch (e: Exception) {
             Result.failure(e)
