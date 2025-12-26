@@ -21,7 +21,7 @@ class MainScreenViewModel {
     val secondPlayerName = mutableStateOf(TextFieldValue("Игрок 2"))
     val reporterName = mutableStateOf(firstPlayerName.value)
     val date = mutableStateOf(TextFieldValue(DateManager.getCurrentDateAsString()))
-    val tournamentName = mutableStateOf(TextFieldValue("Шахматный турнир N"))
+    val tournamentName = mutableStateOf(TextFieldValue("Шахматный турнир №"))
     val studentGroupNumber = mutableStateOf(TextFieldValue("1000"))
     val studentIDNumber = mutableStateOf(TextFieldValue("100000"))
     val teacherName = mutableStateOf(TextFieldValue("Преподаватель"))
