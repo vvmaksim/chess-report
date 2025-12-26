@@ -13,6 +13,8 @@ import io.github.vvmaksim.model.GameResult
 import io.github.vvmaksim.model.MatchData
 import io.github.vvmaksim.model.PgnManager
 import io.github.vvmaksim.model.TableManager
+import io.github.vvmaksim.model.UserSettings
+import io.github.vvmaksim.model.UserSettingsManager
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.pathString
@@ -36,6 +38,35 @@ class MainScreenViewModel {
     val secondMatchMovesAsLink = mutableStateOf(true)
     val secondMatchResult = mutableStateOf(GameResult.FIRST_PLAYER_IS_WINNER)
     val path = mutableStateOf(Path(PrivateConfig.getDefaultUserDirPath()))
+
+    init {
+        loadInitialSettings()
+    }
+
+    private fun loadInitialSettings() {
+        UserSettingsManager.loadSettings()?.let { settings ->
+            firstPlayerName.value = TextFieldValue(settings.firstPlayerName)
+            secondPlayerName.value = TextFieldValue(settings.secondPlayerName)
+            tournamentName.value = TextFieldValue(settings.tournamentName)
+            studentGroupNumber.value = TextFieldValue(settings.studentGroupNumber)
+            studentIDNumber.value = TextFieldValue(settings.studentIDNumber)
+            teacherName.value = TextFieldValue(settings.teacherName)
+            reporterName.value = firstPlayerName.value
+        }
+    }
+
+    private fun saveCurrentSettings() {
+        val settings =
+            UserSettings(
+                firstPlayerName = firstPlayerName.value.text,
+                secondPlayerName = secondPlayerName.value.text,
+                tournamentName = tournamentName.value.text,
+                studentGroupNumber = studentGroupNumber.value.text,
+                studentIDNumber = studentIDNumber.value.text,
+                teacherName = teacherName.value.text,
+            )
+        UserSettingsManager.saveSettings(settings)
+    }
 
     fun onFirstMatchMovesChange(newValue: TextFieldValue) {
         firstMatchMoves.value = newValue
@@ -178,6 +209,9 @@ class MainScreenViewModel {
                 secondMatchMovesAsLink = false, // Data is now processed
                 secondMatchResult = if (secondMatchMovesAsLink.value) secondGameData.result else secondMatchResult.value,
             )
+
+        saveCurrentSettings()
+
         isGenerated.value = true
         val formattedDate = DateManager.getFormattedDateAsString(data.date)
         val fileName = TextManager.Table.getTableName(data.studentIDNumber, formattedDate)
