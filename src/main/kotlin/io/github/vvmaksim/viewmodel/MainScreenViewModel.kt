@@ -3,6 +3,7 @@ package io.github.vvmaksim.viewmodel
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import io.github.vvmaksim.app.config.PrivateConfig
+import io.github.vvmaksim.app.config.TextManager
 import io.github.vvmaksim.model.DateManager
 import io.github.vvmaksim.model.GameResult
 import io.github.vvmaksim.model.MatchData
@@ -51,7 +52,7 @@ class MainScreenViewModel {
         isGenerated.value = true
         println(data.toString())
         val formattedDate = DateManager.getFormattedDateAsString(data.date)
-        val fileName = "Отчёт.ТК.ФВиС.${data.studentIDNumber}.$formattedDate.xlsx"
+        val fileName = TextManager.Table.getTableName(data.studentIDNumber, formattedDate)
         TableManager.createTable("${path.pathString}/$fileName", data)
     }
 }

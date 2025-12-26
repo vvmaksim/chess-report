@@ -3,6 +3,7 @@ package io.github.vvmaksim.model
 import com.github.bhlangonijr.chesslib.Board
 import com.github.bhlangonijr.chesslib.move.MoveList
 import io.github.vvmaksim.app.Logger
+import io.github.vvmaksim.app.config.TextManager
 
 object ChessManager {
     fun getMoves(pgnString: String): List<Triple<Int, String, String?>> {
@@ -28,7 +29,7 @@ object ChessManager {
             }
             return result
         } catch (ex: Exception) {
-            Logger.error("Ошибка парсинга PGN '$pgnString': $ex")
+            Logger.error(TextManager.Errors.getParsePGNErrorMessage(pgnString, ex.toString()))
             return emptyList()
         }
     }

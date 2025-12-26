@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.vvmaksim.app.config.PrivateConfig
+import io.github.vvmaksim.app.config.TextManager
 import io.github.vvmaksim.app.theme.AppTheme
 import io.github.vvmaksim.model.DialogManager
 import kotlin.text.ifEmpty
@@ -68,7 +69,7 @@ fun SelectPathButton(
                     .padding(horizontal = 16.dp),
         ) {
             Text(
-                text = currentPath.ifEmpty { "Выберите директорию, в которую будет сохранён отчёт" },
+                text = currentPath.ifEmpty { TextManager.UI.SELECT_DIRECTORY_PATH_FOR_SAVE_REPORT },
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.body1,

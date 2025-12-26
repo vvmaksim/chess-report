@@ -24,6 +24,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import io.github.vvmaksim.app.Logger
+import io.github.vvmaksim.app.config.TextManager
 import io.github.vvmaksim.app.theme.AppTheme
 import io.github.vvmaksim.model.GameResult
 import io.github.vvmaksim.viewmodel.MainScreenViewModel
@@ -54,7 +55,7 @@ fun DataBlock(
             val isFocusedSecondMatchMovesField = remember { mutableStateOf(false) }
             val scope = rememberCoroutineScope()
 
-            DataBlockTitleText(text = "Заполните данные для отчёта:")
+            DataBlockTitleText(text = TextManager.UI.MATCH_INFO_TITLE)
             Spacer(Modifier.padding(8.dp))
             CustomTextField(
                 value = viewModel.firstPlayerName.value,
@@ -62,8 +63,8 @@ fun DataBlock(
                     viewModel.firstPlayerName.value = newValue
                     viewModel.reporterName.value = newValue
                 },
-                label = { Text("Игрок 1") },
-                placeholder = { Text("ФИО") },
+                label = { Text(TextManager.UI.FIRST_PLAYER_LABEL) },
+                placeholder = { Text(TextManager.UI.FULL_NAME_PLACEHOLDER) },
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.padding(8.dp))
@@ -72,8 +73,8 @@ fun DataBlock(
                 onValueChange = { newValue: TextFieldValue ->
                     viewModel.secondPlayerName.value = newValue
                 },
-                label = { Text("Игрок 2") },
-                placeholder = { Text("ФИО") },
+                label = { Text(TextManager.UI.SECOND_PLAYER_LABEL) },
+                placeholder = { Text(TextManager.UI.FULL_NAME_PLACEHOLDER) },
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.padding(8.dp))
@@ -82,8 +83,8 @@ fun DataBlock(
                 onValueChange = { newValue: TextFieldValue ->
                     viewModel.reporterName.value = newValue
                 },
-                label = { Text("Репортёр") },
-                placeholder = { Text("ФИО") },
+                label = { Text(TextManager.UI.REPORTER_LABEL) },
+                placeholder = { Text(TextManager.UI.FULL_NAME_PLACEHOLDER) },
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.padding(8.dp))
@@ -92,8 +93,8 @@ fun DataBlock(
                 onValueChange = { newValue: TextFieldValue ->
                     viewModel.teacherName.value = newValue
                 },
-                label = { Text("Преподаватель") },
-                placeholder = { Text("ФИО") },
+                label = { Text(TextManager.UI.TEACHER_LABEL) },
+                placeholder = { Text(TextManager.UI.FULL_NAME_PLACEHOLDER) },
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.padding(8.dp))
@@ -102,8 +103,8 @@ fun DataBlock(
                 onValueChange = { newValue: TextFieldValue ->
                     viewModel.tournamentName.value = newValue
                 },
-                label = { Text("Название турнира") },
-                placeholder = { Text("Шахматный турнир №1") },
+                label = { Text(TextManager.UI.TOURNAMENT_NAME_LABEL) },
+                placeholder = { Text(TextManager.UI.TOURNAMENT_NAME_PLACEHOLDER) },
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.padding(8.dp))
@@ -112,8 +113,8 @@ fun DataBlock(
                 onValueChange = { newValue: TextFieldValue ->
                     viewModel.date.value = newValue
                 },
-                label = { Text("Дата партии") },
-                placeholder = { Text("ДД.ММ.ГГГГ") },
+                label = { Text(TextManager.UI.MATCH_DATE_LABEL) },
+                placeholder = { Text(TextManager.UI.MATCH_DATE_PLACEHOLDER) },
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.padding(8.dp))
@@ -122,8 +123,8 @@ fun DataBlock(
                 onValueChange = { newValue: TextFieldValue ->
                     viewModel.studentIDNumber.value = newValue
                 },
-                label = { Text("Номер студенческого") },
-                placeholder = { Text("000000") },
+                label = { Text(TextManager.UI.STUDENT_ID_NUMBER_LABEL) },
+                placeholder = { Text(TextManager.UI.STUDENT_ID_NUMBER_PLACEHOLDER) },
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.padding(8.dp))
@@ -132,15 +133,15 @@ fun DataBlock(
                 onValueChange = { newValue: TextFieldValue ->
                     viewModel.studentGroupNumber.value = newValue
                 },
-                label = { Text("Номер группы") },
-                placeholder = { Text("0000") },
+                label = { Text(TextManager.UI.STUDENT_GROUP_NUMBER_LABEL) },
+                placeholder = { Text(TextManager.UI.STUDENT_GROUP_NUMBER_PLACEHOLDER) },
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.padding(8.dp))
-            DataBlockTitleText("Партия 1:")
+            DataBlockTitleText(TextManager.UI.FIRST_GAME_TITLE)
 
             CustomCheckboxRow(
-                text = "Записать ходы партии по ссылки",
+                text = TextManager.UI.WRITE_MOVES_FROM_LINK,
                 checked = viewModel.firstMatchMovesAsLink.value,
                 onCheckedChange = { viewModel.firstMatchMovesAsLink.value = it },
             )
@@ -155,15 +156,20 @@ fun DataBlock(
                     Text(
                         text =
                             if (viewModel.firstMatchMovesAsLink.value) {
-                                "Вставьте ссылку на анализ партии"
+                                TextManager.UI.MATCH_MOVES_LABEL_WITH_LINK
                             } else {
-                                "Ходы в формате PGN"
+                                TextManager.UI.MATCH_MOVES_LABEL_WITH_PGN
                             },
                     )
                 },
                 placeholder = {
                     Text(
-                        text = if (viewModel.firstMatchMovesAsLink.value) "https://lichess.org/" else "1.e4 e5 2.Nf3 Nc6 ...",
+                        text =
+                            if (viewModel.firstMatchMovesAsLink.value) {
+                                TextManager.UI.MATCH_MOVES_PLACEHOLDER_WITH_LINK
+                            } else {
+                                TextManager.UI.MATCH_MOVES_PLACEHOLDER_WITH_PGN
+                            },
                     )
                 },
                 singleLine = false,
@@ -176,16 +182,16 @@ fun DataBlock(
             )
             Spacer(Modifier.padding(8.dp))
             if (!viewModel.firstMatchMovesAsLink.value) {
-                DataBlockTitleText("Победитель")
+                DataBlockTitleText(TextManager.Words.WINNER)
                 Spacer(Modifier.padding(8.dp))
                 DropdownSelectButton(
-                    items = listOf(viewModel.firstPlayerName.value.text, viewModel.secondPlayerName.value.text, "Ничья"),
+                    items = listOf(viewModel.firstPlayerName.value.text, viewModel.secondPlayerName.value.text, TextManager.Words.DRAW),
                     selectedItem =
                         when (viewModel.firstMatchResult.value) {
                             GameResult.FIRST_PLAYER_IS_WINNER -> viewModel.firstPlayerName.value.text
                             GameResult.SECOND_PLAYER_IS_WINNER -> viewModel.secondPlayerName.value.text
-                            GameResult.DRAW -> "Ничья"
-                            else -> "Что-то пошло не так=("
+                            GameResult.DRAW -> TextManager.Words.DRAW
+                            else -> TextManager.Errors.UNKNOWN_ERROR_MESSAGE
                         },
                     onItemSelected = { selectedResult: String ->
                         when (selectedResult) {
@@ -197,10 +203,10 @@ fun DataBlock(
                 )
                 Spacer(Modifier.padding(8.dp))
             }
-            DataBlockTitleText("Партия 2:")
+            DataBlockTitleText(TextManager.UI.SECOND_GAME_TITLE)
 
             CustomCheckboxRow(
-                text = "Записать ходы партии по ссылки",
+                text = TextManager.UI.WRITE_MOVES_FROM_LINK,
                 checked = viewModel.secondMatchMovesAsLink.value,
                 onCheckedChange = { viewModel.secondMatchMovesAsLink.value = it },
             )
@@ -215,15 +221,20 @@ fun DataBlock(
                     Text(
                         text =
                             if (viewModel.secondMatchMovesAsLink.value) {
-                                "Вставьте ссылку на анализ партии"
+                                TextManager.UI.MATCH_MOVES_LABEL_WITH_LINK
                             } else {
-                                "Ходы в формате PGN"
+                                TextManager.UI.MATCH_MOVES_LABEL_WITH_PGN
                             },
                     )
                 },
                 placeholder = {
                     Text(
-                        text = if (viewModel.secondMatchMovesAsLink.value) "https://lichess.org/" else "1.e4 e5 2.Nf3 Nc6 ...",
+                        text =
+                            if (viewModel.secondMatchMovesAsLink.value) {
+                                TextManager.UI.MATCH_MOVES_PLACEHOLDER_WITH_LINK
+                            } else {
+                                TextManager.UI.MATCH_MOVES_PLACEHOLDER_WITH_PGN
+                            },
                     )
                 },
                 singleLine = false,
@@ -236,16 +247,16 @@ fun DataBlock(
             )
             Spacer(Modifier.padding(8.dp))
             if (!viewModel.secondMatchMovesAsLink.value) {
-                DataBlockTitleText("Победитель")
+                DataBlockTitleText(TextManager.Words.WINNER)
                 Spacer(Modifier.padding(8.dp))
                 DropdownSelectButton(
-                    items = listOf(viewModel.firstPlayerName.value.text, viewModel.secondPlayerName.value.text, "Ничья"),
+                    items = listOf(viewModel.firstPlayerName.value.text, viewModel.secondPlayerName.value.text, TextManager.Words.DRAW),
                     selectedItem =
                         when (viewModel.secondMatchResult.value) {
                             GameResult.FIRST_PLAYER_IS_WINNER -> viewModel.firstPlayerName.value.text
                             GameResult.SECOND_PLAYER_IS_WINNER -> viewModel.secondPlayerName.value.text
-                            GameResult.DRAW -> "Ничья"
-                            else -> "Что-то пошло не так=("
+                            GameResult.DRAW -> TextManager.Words.DRAW
+                            else -> TextManager.Errors.UNKNOWN_ERROR_MESSAGE
                         },
                     onItemSelected = { selectedResult: String ->
                         when (selectedResult) {
@@ -257,7 +268,7 @@ fun DataBlock(
                 )
                 Spacer(Modifier.padding(8.dp))
             }
-            DataBlockTitleText("Выберите директорию, в которую будет сохранён отчёт:")
+            DataBlockTitleText(TextManager.UI.SELECT_DIRECTORY_PATH_FOR_SAVE_REPORT)
             Spacer(Modifier.padding(8.dp))
             SelectPathButton(
                 selectedPath = viewModel.path.value.pathString,
@@ -276,7 +287,7 @@ fun DataBlock(
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                buttonText = "Сгенерировать отчёт",
+                buttonText = TextManager.UI.GENERATE_REPORT_BUTTON_TEXT,
             )
             if (viewModel.isGenerated.value) {
                 Spacer(Modifier.padding(8.dp))
@@ -285,12 +296,12 @@ fun DataBlock(
                         try {
                             Desktop.getDesktop().open(File(viewModel.path.value.pathString))
                         } catch (ex: Exception) {
-                            openDirectoryError.value = "Не удалось открыть директорию:${viewModel.path.value}. Ex:$ex"
+                            openDirectoryError.value = TextManager.Errors.getOpenDirectoryErrorMessage(viewModel.path.value, ex.toString())
                             Logger.error(openDirectoryError.value)
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    buttonText = "Открыть папку с отчётом",
+                    buttonText = TextManager.UI.OPEN_DIRECTORY_BUTTON_TEXT,
                 )
                 if (openDirectoryError.value.isNotEmpty()) {
                     Spacer(Modifier.padding(8.dp))
