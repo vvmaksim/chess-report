@@ -1,7 +1,9 @@
 package io.github.vvmaksim.model
 
+import com.github.bhlangonijr.chesslib.move.MoveConversionException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class ChessManagerTest {
     @Test
@@ -35,10 +37,10 @@ class ChessManagerTest {
     }
 
     @Test
-    fun `getMoves should return empty moves list because moves in bot correct`() {
+    fun `getMoves should throw exception for invalid move`() {
         val pgnString = "1. e4 e9"
-        val expectedMoves = emptyList<Triple<Int, String, String?>>()
-        val moves = ChessManager.getMoves(pgnString)
-        assertEquals(expectedMoves, moves)
+        assertThrows<MoveConversionException> {
+            ChessManager.getMoves(pgnString)
+        }
     }
 }

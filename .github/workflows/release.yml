@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-and-release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Update packageVersion with release tag
+        run: |
+          sed -i "s/packageVersion = ".*"/packageVersion = "${{ github.ref_name }}"/" build.gradle.kts
+        shell: bash
+
+      - name: Make gradlew executable
+        if: runner.os != 'Windows'
+        run: chmod +x ./gradlew
+
+      - name: Build for Linux
+        if: runner.os == 'Linux'
+        run: ./gradlew packageDeb packageAppImage
+        
+      - name: Build for Windows
+        if: runner.os == 'Windows'
+        run: ./gradlew packageMsi packageExe
+
+      - name: Build for macOS
+        if: runner.os == 'macOS'
+        run: ./gradlew packageDmg
+        
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/compose/binaries/main/**/*.deb
+            build/compose/binaries/main/**/*.AppImage
+            build/compose/binaries/main/**/*.msi
+            build/compose/binaries/main/**/*.exe
+            build/compose/binaries/main/**/*.dmg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

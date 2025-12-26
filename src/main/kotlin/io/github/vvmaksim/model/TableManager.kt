@@ -1,6 +1,7 @@
 package io.github.vvmaksim.model
 
 import io.github.vvmaksim.app.config.PrivateConfig
+import io.github.vvmaksim.app.config.TextManager
 import org.apache.poi.ss.usermodel.BorderStyle
 import org.apache.poi.ss.usermodel.HorizontalAlignment
 import org.apache.poi.ss.usermodel.VerticalAlignment
@@ -62,11 +63,11 @@ object TableManager {
         isLastTable: Boolean,
     ): Int {
         val movesString = if (matchNumber == 1) data.firstMatchMoves else data.secondMatchMoves
+        val result = if (matchNumber == 1) data.firstMatchResult else data.secondMatchResult
         val parsedMoves = ChessManager.getMoves(movesString)
         val movesMap = parsedMoves.associate { it.first to (it.second to it.third) }
         val whitePlayer = if (matchNumber == 1) data.firstPlayerName else data.secondPlayerName
         val blackPlayer = if (matchNumber == 1) data.secondPlayerName else data.firstPlayerName
-        val result = if (matchNumber == 1) data.firstMatchResult else data.secondMatchResult
         val movesCount = parsedMoves.size
         val blocksCount = maxOf(2, (movesCount + 31) / 32)
         val totalColumns = blocksCount * 3
@@ -118,7 +119,7 @@ object TableManager {
             bottomLeftCellIndex = 6,
             topRightCellIndex = startColumnIndex,
             bottomRightCellIndex = endColumnIndex,
-            text = "Шахматная партия №$matchNumber",
+            text = TextManager.Table.getGameNumberTitle(matchNumber),
             style = centeredStyle,
         )
         mergeCells(
@@ -127,12 +128,12 @@ object TableManager {
             bottomLeftCellIndex = 7,
             topRightCellIndex = startColumnIndex,
             bottomRightCellIndex = endColumnIndex,
-            text = "${data.tournamentName} ${data.date}",
+            text = TextManager.Table.getTournamentNameWithDate(data.tournamentName, data.date),
             style = centeredStyle,
         )
         val whitePlayerRow = sheet.getRow(8) ?: sheet.createRow(8)
         whitePlayerRow.createCell(startColumnIndex).apply {
-            setCellValue("Белые")
+            setCellValue(TextManager.Words.WHITES)
             cellStyle = borderedLabelStyle
         }
         mergeCells(
@@ -146,7 +147,7 @@ object TableManager {
         )
         val blackPlayerRow = sheet.getRow(9) ?: sheet.createRow(9)
         blackPlayerRow.createCell(startColumnIndex).apply {
-            setCellValue("Черные")
+            setCellValue(TextManager.Words.BLACKS)
             cellStyle = borderedLabelStyle
         }
         mergeCells(
@@ -199,11 +200,11 @@ object TableManager {
                 cellStyle = if (block == 0 && startColumnIndex > 1) headerStyleNumFirst else headerStyleNum
             }
             headerRow.createCell(col1 + 1).apply {
-                setCellValue("Белые")
+                setCellValue(TextManager.Words.WHITES)
                 cellStyle = headerStyleMoves
             }
             headerRow.createCell(col1 + 2).apply {
-                setCellValue("Черные")
+                setCellValue(TextManager.Words.BLACKS)
                 cellStyle = headerStyleMoves
             }
         }
@@ -289,6 +290,7 @@ object TableManager {
             GameResult.FIRST_PLAYER_IS_WINNER -> if (matchNumber == 1) "1" to "0" else "0" to "1"
             GameResult.SECOND_PLAYER_IS_WINNER -> if (matchNumber == 1) "0" to "1" else "1" to "0"
             GameResult.DRAW -> "0.5" to "0.5"
+            GameResult.UNKNOWN -> "*" to "*"
         }.let {
             whiteScore = it.first
             blackScore = it.second
@@ -328,15 +330,15 @@ object TableManager {
         resultHeaderRow.getCell(resultStartColumn + 1) ?: resultHeaderRow.createCell(resultStartColumn + 1)
         resultHeaderRow.getCell(resultStartColumn + 2) ?: resultHeaderRow.createCell(resultStartColumn + 2)
         resultHeaderRow.getCell(resultStartColumn).apply {
-            setCellValue("Итог:")
+            setCellValue(TextManager.Words.RESULT)
             cellStyle = resultItogStyle
         }
         resultHeaderRow.getCell(resultStartColumn + 1).apply {
-            setCellValue("Белые")
+            setCellValue(TextManager.Words.WHITES)
             cellStyle = resultHeaderStyle
         }
         resultHeaderRow.getCell(resultStartColumn + 2).apply {
-            setCellValue("Черные")
+            setCellValue(TextManager.Words.BLACKS)
             cellStyle = resultHeaderStyle
         }
 
@@ -410,9 +412,7 @@ object TableManager {
             bottomLeftCellIndex = 0,
             topRightCellIndex = 1,
             bottomRightCellIndex = 15,
-            text =
-                "Отчет о результатах самостоятельной работы обучающегося по дисциплинам \n" +
-                    " \"Физическая культура\" или \"Элективные курсы по физической культуре и спорту\"",
+            text = TextManager.Table.MAIN_TITLE,
             style = style,
         )
         sheet.getRow(0).apply {
@@ -447,7 +447,7 @@ object TableManager {
                 heightInPoints = 40f
             }
         (row1.getCell(1) ?: row1.createCell(1)).apply {
-            setCellValue("Студ.\nбилет: ")
+            setCellValue(TextManager.Table.STUDENT_ID_CARD)
             cellStyle = style
         }
 
@@ -457,12 +457,12 @@ object TableManager {
             bottomLeftCellIndex = 2,
             topRightCellIndex = 2,
             bottomRightCellIndex = 5,
-            text = "ФИО",
+            text = TextManager.Table.FULL_NAME,
             style = style,
         )
 
         (row1.getCell(6) ?: row1.createCell(6)).apply {
-            setCellValue("Группа")
+            setCellValue(TextManager.Words.GROUP)
             cellStyle = style
         }
 
@@ -472,7 +472,7 @@ object TableManager {
             bottomLeftCellIndex = 2,
             topRightCellIndex = 7,
             bottomRightCellIndex = 9,
-            text = "Спортивное отделение",
+            text = TextManager.Table.SPORT_DEPARTMENT,
             style = style,
         )
 
@@ -482,7 +482,7 @@ object TableManager {
             bottomLeftCellIndex = 2,
             topRightCellIndex = 10,
             bottomRightCellIndex = 12,
-            text = "Преподаватель",
+            text = TextManager.Words.TEACHER,
             style = style,
         )
 
@@ -521,7 +521,7 @@ object TableManager {
             bottomLeftCellIndex = 3,
             topRightCellIndex = 7,
             bottomRightCellIndex = 9,
-            text = "Шахматы",
+            text = TextManager.Words.CHESS,
             style = style,
         )
 
@@ -560,10 +560,7 @@ object TableManager {
             bottomLeftCellIndex = 3,
             topRightCellIndex = 13,
             bottomRightCellIndex = 15,
-            text =
-                "Формат имени файла с отчетом: Отчет.ТК.ФВиС.999901.2020-04-12, где ТК – текущий контроль, " +
-                    "ФВиС – кафедра физического воспитания и спорта, 999901 – номер студ. билета, " +
-                    "2020-04-12 – дата отправки отчета.",
+            text = TextManager.Table.FILE_NAME_FORMAT,
             style = templateStyle,
         )
     }

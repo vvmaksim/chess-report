@@ -10,7 +10,9 @@ data class MatchData(
     val studentIDNumber: Int,
     val teacherName: String,
     val firstMatchMoves: String,
+    val firstMatchMovesAsLink: Boolean,
     val firstMatchResult: GameResult,
     val secondMatchMoves: String,
+    val secondMatchMovesAsLink: Boolean,
     val secondMatchResult: GameResult,
 )
