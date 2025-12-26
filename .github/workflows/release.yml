@@ -29,13 +29,13 @@ jobs:
       - name: Update packageVersion on Linux/Windows
         if: runner.os != 'macOS'
         run: |
-          sed -i "s/packageVersion = ".*"/packageVersion = "${{ github.ref_name }}"/" build.gradle.kts
+          sed -i "s/packageVersion = \".*\"/packageVersion = \"${{ github.ref_name }}\"/" build.gradle.kts
         shell: bash
 
       - name: Update packageVersion on macOS
         if: runner.os == 'macOS'
         run: |
-          sed -i '' "s/packageVersion = ".*"/packageVersion = "${{ github.ref_name }}"/" build.gradle.kts
+          sed -i '' "s/packageVersion = \".*\"/packageVersion = \"${{ github.ref_name }}\"/" build.gradle.kts
         shell: bash
 
       - name: Make gradlew executable
