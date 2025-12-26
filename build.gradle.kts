@@ -4,6 +4,7 @@ plugins {
     alias(deps.plugins.kotlin.jvm)
     alias(deps.plugins.compose)
     alias(deps.plugins.compose.plugin)
+    alias(deps.plugins.kotlin.serialization)
     id("jacoco")
 }
 
@@ -49,6 +50,7 @@ dependencies {
     implementation(deps.lifecycle.viewmodel.savedstate)
     implementation(deps.lifecycle.viewmodel.compose)
     implementation(deps.kotlinx.coroutines.swing)
+    implementation(deps.kotlinx.serialization.json)
 
     testImplementation(deps.junit.jupiter.api)
     testRuntimeOnly(deps.junit.jupiter.engine)

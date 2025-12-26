@@ -11,14 +11,21 @@ ktor = "2.3.12"
 kotlinx-coroutines-core = "1.8.1"
 log4j = "2.23.1" # Add Log4j2 version
 lifecycle = "2.9.0"
+kotlinx-serialization = "1.9.0"
 
 [libraries]
-kotlin-logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin-logging" }
-logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+# For chess
 chesslib = { module = "com.github.bhlangonijr:chesslib", version.ref = "chesslib" }
+
+# Kotlinx
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines-core" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
+# For logging
 log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
 log4j-slf4j-impl = { module = "org.apache.logging.log4j:log4j-slf4j-impl", version.ref = "log4j" }
+kotlin-logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin-logging" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
 # Lifecycle
 lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
@@ -43,6 +50,7 @@ junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 # Compose
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
