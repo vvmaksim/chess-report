@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -53,6 +54,7 @@ fun DataBlock(
             val isFocusedFirstMatchMovesField = remember { mutableStateOf(false) }
             val isFocusedSecondMatchMovesField = remember { mutableStateOf(false) }
             val scope = rememberCoroutineScope()
+            val error by viewModel.errorState
 
             DataBlockTitleText(text = TextManager.UI.MATCH_INFO_TITLE)
             Spacer(Modifier.padding(8.dp))
@@ -149,7 +151,7 @@ fun DataBlock(
             CustomTextField(
                 value = viewModel.firstMatchMoves.value,
                 onValueChange = { newValue: TextFieldValue ->
-                    viewModel.firstMatchMoves.value = newValue
+                    viewModel.onFirstMatchMovesChange(newValue)
                 },
                 label = { Text(text = viewModel.firstMatchMovesLabel) },
                 placeholder = { Text(text = viewModel.firstMatchMovesPlaceholder) },
@@ -184,7 +186,7 @@ fun DataBlock(
             CustomTextField(
                 value = viewModel.secondMatchMoves.value,
                 onValueChange = { newValue: TextFieldValue ->
-                    viewModel.secondMatchMoves.value = newValue
+                    viewModel.onSecondMatchMovesChange(newValue)
                 },
                 label = { Text(text = viewModel.secondMatchMovesLabel) },
                 placeholder = { Text(text = viewModel.secondMatchMovesPlaceholder) },
@@ -216,13 +218,24 @@ fun DataBlock(
                 },
             )
             Spacer(Modifier.padding(8.dp))
+
+            error?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colors.error,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                )
+            }
+
             CustomButton(
                 onClick = {
-                    viewModel.generateReport(viewModel.path.value)
                     scope.launch {
+                        viewModel.generateReport(viewModel.path.value)
                         // Задержка для того, чтобы Compose успевал прорисовать новую кнопку и можно было проскролить вниз
-                        delay(10)
-                        scrollState.animateScrollTo(scrollState.maxValue)
+                        if (viewModel.isGenerated.value) {
+                            delay(10)
+                            scrollState.animateScrollTo(scrollState.maxValue)
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),

@@ -74,9 +74,14 @@ object TextManager {
             exceptionAsString: String,
         ) = "Не удалось открыть директорию:$errorPath. Ex:$exceptionAsString"
 
-        fun getParsePGNErrorMessage(
-            pgnString: String,
-            exceptionAsString: String,
-        ) = "Ошибка парсинга PGN '$pgnString': $exceptionAsString"
+        fun getIncorrectNotationInGameErrorMessage(
+            gameNumber: Int,
+            exceptionAsString: String?,
+        ) = "Некорректная нотация в Партии $gameNumber: $exceptionAsString"
+
+        fun getErrorInGameErrorMessage(
+            gameNumber: Int,
+            exceptionAsString: String?,
+        ) = "Ошибка в Партии $gameNumber: $exceptionAsString"
     }
 }
